@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>DAP-CLIP: DINO-Affinity Proxy for Training-Free CLIP Segmentation</h1>
+<h1>DouC: Dual-Branch CLIP for Training-Free Open-Vocabulary Segmentation</h1>
 
 <div>
     <strong>ICML 2026 Submission</strong>
@@ -18,8 +18,7 @@
 </div>
 
 ## TL;DR
-> *Training-free open-vocabulary semantic segmentation aims to transfer vision--language models to dense prediction without task-specific supervision. Despite recent progress, existing approaches often suffer from fragmented object regions, boundary leakage, and spurious background activations, particularly under large domain shifts and fine-grained object structures. 
-We introduce \emph{Dense Aggregation via Proxies (DAP)}, a patch-affinity-guided attention mechanism that replaces the native self-attention weights in the final CLIP visual transformer block with an externally induced patch affinity matrix. Patch affinities are derived from external visual representations and optionally constrained to enforce region-level consistency, while CLIP’s value projections, text--image alignment, and training-free setting remain unchanged. By propagating semantic affinity through proxy-consistent neighborhoods, DAP promotes coherent object regions, sharper boundaries, and effective background suppression without relying on additional training or explicit mask supervision. Extensive experiments across eight benchmarks and multiple CLIP backbones demonstrate that DAP consistently improves over prior training-free methods, generalizes across diverse CLIP variants, and scales favorably with model capacity.*
+> *Open-vocabulary semantic segmentation requires assigning pixel-level semantic labels while supporting an open and unrestricted set of categories. Training-free CLIP-based approaches preserve strong zero-shot generalization but typically rely on a single inference mechanism, limiting their ability to jointly address unreliable local tokens and insufficient spatial coherence. We propose \textbf{DouC}, a training-free dual-branch CLIP framework that decomposes dense prediction into two complementary components. OG-CLIP improves patch-level reliability via lightweight, inference-time token gating, while FADE-CLIP injects external structural priors through proxy attention guided by frozen vision foundation models. The two branches are fused at the logit level, enabling local token reliability and structure-aware patch interactions to jointly influence final predictions, with optional instance-aware correction applied as post-processing. DouC introduces no additional learnable parameters, requires no retraining, and preserves CLIP’s zero-shot generalization. Extensive experiments across eight benchmarks and multiple CLIP backbones demonstrate that DouC consistently outperforms prior training-free methods and scales favorably with model capacity.*
 
 
 ## Dependencies and Installation
@@ -27,8 +26,8 @@ We introduce \emph{Dense Aggregation via Proxies (DAP)}, a patch-affinity-guided
 
 ```
 # create new anaconda env
-conda create -n DAP python=3.10
-conda activate DAP
+conda create -n DouC python=3.10
+conda activate DouC
 
 # install torch and dependencies
 pip install -r requirements.txt
@@ -45,7 +44,7 @@ python datasets/cvt_coco_object.py PATH_TO_COCO_STUFF164K -o PATH_TO_COCO164K
 
 ## Model evaluation
 
-In this repo, we integrate our DAP into ProxyCLIP (using sam, mae, dino, dinov2 as the VFMs). Please check `hyper_param.txt` for the hyper parameters.
+In this repo, we integrate our DouC into ProxyCLIP (using sam, mae, dino, dinov2 as the VFMs). Please check `hyper_param.txt` for the hyper parameters.
 
 Please modify some settings in `configs/base_config.py` before running the evaluation.
 
@@ -67,8 +66,14 @@ bash ./dist_test.sh ./config/cfg_DATASET.py
 ```
 
 Evaluation on all datasets:
+
+for running Vit-B/16:
 ```
 python eval_all.py
+```
+for running Vit-L/14 and H/14:
+```
+python eval_all1.py
 ```
 Results will be saved in `results.xlsx`.
 
