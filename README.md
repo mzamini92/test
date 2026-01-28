@@ -7,11 +7,7 @@
 </div>
 
 
-<div>
-    <h4 align="center">
-        • <a href="#" target='_blank'>[arXiv]</a> •
-    </h4>
-</div>
+
 
 <br>
 
